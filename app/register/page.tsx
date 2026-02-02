@@ -47,8 +47,12 @@ export default function RegisterPage() {
 
         router.push('/dashboard');
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+    } catch (err: any) {
+      if (err?.status === 429) {
+        setError('Too many sign-up attempts. Please wait a minute and try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Registration failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -72,6 +76,7 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500"
+                autoComplete="email"
                 required
               />
             </div>
@@ -130,6 +135,7 @@ export default function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500"
+                autoComplete="new-password"
                 required
               />
             </div>
