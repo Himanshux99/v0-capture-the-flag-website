@@ -12,6 +12,35 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 
+// DNS Enumeration Guide Component
+function DnsEnumerationGuide() {
+  return (
+    <Card className="bg-slate-800 border-slate-700 mb-6">
+      <div className="p-6">
+        <h2 className="text-lg font-semibold text-white mb-4">🔍 How to Solve</h2>
+        
+        <div className="bg-slate-900 border border-slate-700 rounded p-4 mb-4">
+          <p className="text-slate-300 mb-3">
+            The organization has hidden internal services. Start by exploring this endpoint:
+          </p>
+          <p className="font-mono text-blue-400 text-sm bg-slate-950 p-2 rounded">
+            /network/admin-panel
+          </p>
+          <p className="text-xs text-slate-400 mt-2">
+            💡 Manually modify the URL in your browser to visit this endpoint.
+          </p>
+        </div>
+
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-4">
+          <p className="text-sm text-yellow-300">
+            <span className="font-semibold">Tip:</span> Each page you discover may contain clues about where to look next. Keep exploring and follow the hints!
+          </p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 export default function ChallengePage() {
   const params = useParams();
   const router = useRouter();
@@ -227,6 +256,11 @@ export default function ChallengePage() {
                 {challenge.full_description || challenge.description}
               </p>
             </div>
+
+            {/* DNS Enumeration Guide */}
+            {challenge.title === 'DNS Enumeration' && (
+              <DnsEnumerationGuide />
+            )}
 
             {lab && (
               <div className="mb-6 flex flex-col gap-2">
