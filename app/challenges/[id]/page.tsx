@@ -85,12 +85,18 @@ export default function ChallengePage() {
       const { data: authData } = await supabase.auth.getUser();
       if (!authData.user) return;
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('solves')
         .select('id')
         .eq('challenge_id', cId)
         .eq('user_id', authData.user.id)
-        .single();
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is "no rows returned" which is expected when not solved
+        console.error('Error checking solve status:', error);
+        return;
+      }
 
       setIsSolved(!!data);
     } catch (error) {
