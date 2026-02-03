@@ -42,6 +42,17 @@ VALUES
   ('DNS Enumeration', 'Networking', 'medium', '2025', 'Enumerate DNS records', 'Find subdomains by enumerating DNS records to locate the flag.', 'flag{dns_enumerated}', 25),
   ('Man-in-the-Middle Attack', 'Networking', 'hard', '2025', 'Perform a MITM attack', 'Intercept encrypted traffic using MITM techniques to find the flag.', 'flag{mitm_success}', 50);
 
+-- OSINT (Open Source Intelligence) challenges
+INSERT INTO challenges (title, category, difficulty, target_year, description, full_description, flag_hash, points)
+VALUES 
+  ('Whois Lookup', 'OSINT', 'easy', '2025', 'Gather domain information', 'Use WHOIS to find publicly available information about a domain and extract the flag.', 'flag{whois_info_found}', 10),
+  ('Subdomain Enumeration', 'OSINT', 'medium', '2025', 'Find hidden subdomains', 'Enumerate publicly known subdomains using OSINT techniques to locate a hidden flag.', 'flag{subdomains_found}', 25),
+  ('GitHub Recon', 'OSINT', 'medium', '2025', 'Search GitHub for leaks', 'Search GitHub repositories for accidentally exposed secrets and find the flag.', 'flag{github_secret_exposed}', 25),
+  ('Email Harvesting', 'OSINT', 'medium', '2025', 'Harvest email addresses', 'Find associated email addresses linked to a domain using public databases and search engines.', 'flag{emails_harvested}', 25),
+  ('IP Geolocation', 'OSINT', 'medium', '2025', 'Locate IP address origin', 'Use IP geolocation databases to determine the physical location of a server and find the flag.', 'flag{ip_geolocation_found}', 25),
+  ('Social Media Profiling', 'OSINT', 'hard', '2025', 'Profile a target on social media', 'Gather information from social media profiles to find sensitive data and extract the flag.', 'flag{profile_info_gathered}', 50),
+  ('DNS History Investigation', 'OSINT', 'hard', '2025', 'Investigate DNS history', 'Use DNS history records to uncover historical information about a domain and find the flag.', 'flag{dns_history_uncovered}', 50);
+
 -- Insert labs for selected challenges (using subqueries to get challenge IDs).
 -- Uses ON CONFLICT to avoid duplicate labs if the script is re-run.
 INSERT INTO labs (challenge_id, slug, lab_type, is_active)
@@ -74,4 +85,32 @@ ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO labs (challenge_id, slug, lab_type, is_active)
 SELECT id, 'packet-analysis', 'networking', true FROM challenges WHERE title = 'Packet Analysis'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'whois-lookup', 'osint', true FROM challenges WHERE title = 'Whois Lookup'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'subdomain-enumeration', 'osint', true FROM challenges WHERE title = 'Subdomain Enumeration'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'github-recon', 'osint', true FROM challenges WHERE title = 'GitHub Recon'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'social-media-profiling', 'osint', true FROM challenges WHERE title = 'Social Media Profiling'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'dns-history-investigation', 'osint', true FROM challenges WHERE title = 'DNS History Investigation'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'email-harvesting', 'osint', true FROM challenges WHERE title = 'Email Harvesting'
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO labs (challenge_id, slug, lab_type, is_active)
+SELECT id, 'ip-geolocation', 'osint', true FROM challenges WHERE title = 'IP Geolocation'
 ON CONFLICT (slug) DO NOTHING;
