@@ -12,6 +12,187 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 
+// DNS Enumeration Guide Component
+function DnsEnumerationGuide() {
+  return (
+    <Card className="bg-slate-800 border-slate-700 mb-6">
+      <div className="p-6">
+        <h2 className="text-lg font-semibold text-white mb-4">🔍 How to Solve</h2>
+        
+        <div className="bg-slate-900 border border-slate-700 rounded p-4 mb-4">
+          <p className="text-slate-300 mb-3">
+            The organization has hidden internal services. Start by exploring this endpoint:
+          </p>
+          <p className="font-mono text-blue-400 text-sm bg-slate-950 p-2 rounded">
+            /network/admin-panel
+          </p>
+          <p className="text-xs text-slate-400 mt-2">
+            💡 Manually modify the URL in your browser to visit this endpoint.
+          </p>
+        </div>
+
+        <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-4">
+          <p className="text-sm text-yellow-300">
+            <span className="font-semibold">Tip:</span> Each page you discover may contain clues about where to look next. Keep exploring and follow the hints!
+          </p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+// Man-in-the-Middle Guide Component with Terminal-style Log Viewer
+function MitmGuide() {
+  return (
+    <>
+      {/* Story Section */}
+      <Card className="bg-slate-800 border-slate-700 mb-6">
+        <div className="p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">📖 Incident Narrative</h2>
+          <div className="space-y-3">
+            <p className="text-slate-300">
+              A user connected to what appeared to be a legitimate public WiFi network while accessing a secure banking service. Unbeknownst to them, a malicious proxy server was intercepting all traffic.
+            </p>
+            <p className="text-slate-300">
+              The attacker logged all HTTP requests and responses, capturing sensitive information transmitted between the client and the web service. Some data was transmitted without proper encryption or obfuscation, and tokens were passed in plaintext headers.
+            </p>
+            <p className="text-slate-300">
+              Your task: Analyze the intercepted proxy logs below to identify any sensitive data that may have leaked due to insecure handling of credentials, tokens, or authentication headers.
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Log Viewer Card */}
+      <Card className="bg-slate-900 border-slate-700 mb-6 overflow-hidden">
+        <div className="p-0">
+          {/* Terminal Header */}
+        <div className="bg-slate-950 border-b border-slate-700 px-4 py-3 flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          </div>
+          <span className="text-slate-400 text-xs font-mono ml-2">proxy_interceptor.log</span>
+        </div>
+
+        {/* Terminal Content */}
+        <div className="p-6 bg-slate-950 font-mono text-xs overflow-y-auto max-h-96">
+          <div className="space-y-4 text-slate-300">
+            {/* Log Entry 1 */}
+            <div>
+              <p className="text-cyan-400">[12:01:04] CONNECT api.securebank.com</p>
+            </div>
+
+            {/* Log Entry 2 */}
+            <div className="border-t border-slate-800 pt-4">
+              <p className="text-cyan-400">[12:01:07] REQUEST POST /api/login</p>
+              <p className="text-slate-400 mt-1">Headers:</p>
+              <p className="text-slate-500 ml-2">Content-Type: application/json</p>
+              <p className="text-slate-500 ml-2">User-Agent: MobileClient/3.4</p>
+              <p className="text-slate-400 mt-2">Body:</p>
+              <div className="ml-2 text-slate-500">
+                <p>{`{`}</p>
+                <p className="ml-2">{`"username": "guest_user",`}</p>
+                <p className="ml-2">{`"password": "welcome123"`}</p>
+                <p>{`}`}</p>
+              </div>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 3 */}
+            <div>
+              <p className="text-green-400">[12:01:09] RESPONSE 200 OK</p>
+              <p className="text-slate-400 mt-1">Set-Cookie: session_id=8f23ac91abffe22</p>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 4 - KEY: Base64 encoded flag */}
+            <div>
+              <p className="text-cyan-400">[12:01:15] REQUEST GET /api/profile</p>
+              <p className="text-slate-400 mt-1">Headers:</p>
+              <p className="text-slate-500 ml-2">
+                Authorization: Bearer ZmxhZ3ttaXRtX3N1Y2Nlc3N9
+              </p>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 5 */}
+            <div>
+              <p className="text-green-400">[12:01:18] RESPONSE 200 OK</p>
+              <div className="mt-1 ml-2 text-slate-500">
+                <p>{`{`}</p>
+                <p className="ml-2">{`"name": "Guest User",`}</p>
+                <p className="ml-2">{`"balance": "₹12,450"`}</p>
+                <p>{`}`}</p>
+              </div>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 6 */}
+            <div>
+              <p className="text-cyan-400">[12:01:25] REQUEST GET /api/notifications</p>
+              <p className="text-slate-400 mt-1">Headers:</p>
+              <p className="text-slate-500 ml-2">Authorization: Bearer 3a4f9d220991ab</p>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 7 */}
+            <div>
+              <p className="text-red-400">[12:01:29] RESPONSE 403 Forbidden</p>
+            </div>
+
+            {/* Separator */}
+            <div className="border-t border-slate-700 pt-4">
+              <p className="text-slate-600">--------------------------------------------------</p>
+            </div>
+
+            {/* Log Entry 8 */}
+            <div>
+              <p className="text-cyan-400">[12:01:34] REQUEST GET /api/debug</p>
+              <p className="text-slate-400 mt-1">Headers:</p>
+              <p className="text-slate-500 ml-2">X-Debug-Mode: disabled</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Instruction Section */}
+        <div className="bg-slate-900 border-t border-slate-700 p-6">
+          <h3 className="text-slate-300 font-semibold mb-3 text-sm">🔎 Analysis Task</h3>
+          <p className="text-slate-400 text-sm mb-3">
+            Review the intercepted proxy logs above. Identify any suspicious or encoded tokens in the request headers.
+          </p>
+          <p className="text-slate-400 text-sm mb-3">
+            Look for patterns that suggest the data is encoded. Common encodings include Base64, hex, or URL encoding.
+          </p>
+          
+        </div>
+      </div>
+    </Card>
+    </>
+  );
+}
+
 export default function ChallengePage() {
   const params = useParams();
   const router = useRouter();
@@ -85,12 +266,18 @@ export default function ChallengePage() {
       const { data: authData } = await supabase.auth.getUser();
       if (!authData.user) return;
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('solves')
         .select('id')
         .eq('challenge_id', cId)
         .eq('user_id', authData.user.id)
-        .single();
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 is "no rows returned" which is expected when not solved
+        console.error('Error checking solve status:', error);
+        return;
+      }
 
       setIsSolved(!!data);
     } catch (error) {
@@ -228,13 +415,23 @@ export default function ChallengePage() {
               </p>
             </div>
 
-            {(lab || challenge.title === 'Obfuscated Code' || challenge.title === 'Anti-Debug Technique') && (
+            {/* DNS Enumeration Guide */}
+            {challenge.title === 'DNS Enumeration' && (
+              <DnsEnumerationGuide />
+            )}
+
+            {/* Man-in-the-Middle Guide (by challenge id) */}
+            {challenge.id === 'b9d63062-26c4-4db4-b2c7-1e6615f40c6d' && (
+              <MitmGuide />
+            )}
+
+            {lab && (
               <div className="mb-6 flex flex-col gap-2">
                 <p className="text-sm text-slate-400">
                   This challenge has an interactive lab environment where you can exploit the
                   vulnerability directly.
                 </p>
-                <Link href={lab ? `/labs/${lab.slug}` : challenge.title === 'Obfuscated Code' ? '/labs/obfuscated-code' : '/labs/anti-debug-technique'}>
+                <Link href={`/labs/${lab.slug}?challengeId=${challengeId}`}>
                   <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
                     {challenge.title === 'Anti-Debug Technique' ? 'Open Lab' : 'Go to Lab'}
                   </Button>
